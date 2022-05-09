@@ -30,7 +30,7 @@ Globals:
     Environment:
       Variables:
         TABLE_NAME: !Ref DynamoDBShoppingCartTable
-        LOG_LEVEL: "INFO"
+        LOG_LEVEL: 'INFO'
         ALLOWED_ORIGIN: !Ref AllowedOrigin
         POWERTOOLS_SERVICE_NAME: shopping-cart
         POWERTOOLS_METRICS_NAMESPACE: ecommerce-app
@@ -63,8 +63,8 @@ Resources:
       MethodSettings:
         - DataTraceEnabled: True
           MetricsEnabled: True
-          ResourcePath: "/*"
-          HttpMethod: "*"
+          ResourcePath: '/*'
+          HttpMethod: '*'
           LoggingLevel: INFO
       Auth:
         Authorizers:
@@ -77,64 +77,64 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Action:
-            - "sts:AssumeRole"
-            Effect: "Allow"
+              - 'sts:AssumeRole'
+            Effect: 'Allow'
             Principal:
               Service:
-                - "lambda.amazonaws.com"
+                - 'lambda.amazonaws.com'
 
   AddToCartRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Action:
-            - "sts:AssumeRole"
-            Effect: "Allow"
+              - 'sts:AssumeRole'
+            Effect: 'Allow'
             Principal:
               Service:
-                - "lambda.amazonaws.com"
+                - 'lambda.amazonaws.com'
 
   LambdaLoggingPolicy:
-    Type: "AWS::IAM::Policy"
+    Type: 'AWS::IAM::Policy'
     Properties:
       PolicyName: LambdaXRayPolicy
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          -
-            Effect: "Allow"
-            Action: [
-              "xray:PutTraceSegments",
-              "xray:PutTelemetryRecords",
-              "logs:CreateLogGroup",
-              "logs:CreateLogStream",
-              "logs:PutLogEvents"
+          - Effect: 'Allow'
+            Action:
+              [
+                'xray:PutTraceSegments',
+                'xray:PutTelemetryRecords',
+                'logs:CreateLogGroup',
+                'logs:CreateLogStream',
+                'logs:PutLogEvents',
               ]
-            Resource: "*"
+            Resource: '*'
       Roles:
         - !Ref ListCartRole
         - !Ref AddToCartRole
 
   DynamoDBReadPolicy:
-    Type: "AWS::IAM::Policy"
+    Type: 'AWS::IAM::Policy'
     Properties:
       PolicyName: DynamoDBReadPolicy
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          -
-            Effect: "Allow"
-            Action: [
-              "dynamodb:GetItem",
-              "dynamodb:Scan",
-              "dynamodb:Query",
-              "dynamodb:BatchGetItem",
-              "dynamodb:DescribeTable"
+          - Effect: 'Allow'
+            Action:
+              [
+                'dynamodb:GetItem',
+                'dynamodb:Scan',
+                'dynamodb:Query',
+                'dynamodb:BatchGetItem',
+                'dynamodb:DescribeTable',
               ]
             Resource:
               - !GetAtt DynamoDBShoppingCartTable.Arn
@@ -143,37 +143,34 @@ Resources:
         - !Ref AddToCartRole
 
   DynamoDBWritePolicy:
-    Type: "AWS::IAM::Policy"
+    Type: 'AWS::IAM::Policy'
     Properties:
       PolicyName: DynamoDBWritePolicy
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          -
-            Effect: "Allow"
-            Action: [
-              "dynamodb:PutItem",
-              "dynamodb:UpdateItem",
-              "dynamodb:ConditionCheckItem",
-              "dynamodb:DeleteItem",
-              "dynamodb:BatchWriteItem"
-            ]
+          - Effect: 'Allow'
+            Action:
+              [
+                'dynamodb:PutItem',
+                'dynamodb:UpdateItem',
+                'dynamodb:ConditionCheckItem',
+                'dynamodb:DeleteItem',
+                'dynamodb:BatchWriteItem',
+              ]
             Resource: !GetAtt DynamoDBShoppingCartTable.Arn
       Roles:
         - !Ref AddToCartRole
 
   SQSSendMessagePolicy:
-    Type: "AWS::IAM::Policy"
+    Type: 'AWS::IAM::Policy'
     Properties:
       PolicyName: SQSSendMessagePolicy
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          -
-            Effect: "Allow"
-            Action: [
-              "sqs:SendMessage*"
-            ]
+          - Effect: 'Allow'
+            Action: ['sqs:SendMessage*']
             Resource: !GetAtt CartDeleteSQSQueue.Arn
       Roles:
         - !Ref AddToCartRole
@@ -183,6 +180,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: ListCart
       CodeUri: shopping-cart-service/
       Handler: list_cart.lambda_handler
       Role: !GetAtt ListCartRole.Arn
@@ -204,6 +202,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: AddToCart
       CodeUri: shopping-cart-service/
       Handler: add_to_cart.lambda_handler
       Role: !GetAtt AddToCartRole.Arn
@@ -226,6 +225,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: UpdateCart
       CodeUri: shopping-cart-service/
       Handler: update_cart.lambda_handler
       Role: !GetAtt AddToCartRole.Arn
@@ -248,6 +248,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: MigrateCart
       CodeUri: shopping-cart-service/
       Handler: migrate_cart.lambda_handler
       Timeout: 30
@@ -274,6 +275,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: CheckoutCart
       CodeUri: shopping-cart-service/
       Handler: checkout_cart.lambda_handler
       Timeout: 10
@@ -299,6 +301,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: GetCartTotal
       CodeUri: shopping-cart-service/
       Handler: get_cart_total.lambda_handler
       Timeout: 10
@@ -318,18 +321,18 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: DeleteFromCart
       CodeUri: shopping-cart-service/
       Handler: delete_from_cart.lambda_handler
-      ReservedConcurrentExecutions: 25  # Keep the ddb spikes down in case of many deletes at once
+      ReservedConcurrentExecutions: 25 # Keep the ddb spikes down in case of many deletes at once
       Policies:
         - SQSPollerPolicy:
-            QueueName:
-              !GetAtt CartDeleteSQSQueue.QueueName
+            QueueName: !GetAtt CartDeleteSQSQueue.QueueName
         - Statement:
             - Effect: Allow
               Action:
-                - "dynamodb:DeleteItem"
-                - "dynamodb:BatchWriteItem"
+                - 'dynamodb:DeleteItem'
+                - 'dynamodb:BatchWriteItem'
               Resource:
                 - !GetAtt DynamoDBShoppingCartTable.Arn
       Layers:
@@ -349,6 +352,7 @@ Resources:
     DependsOn:
       - LambdaLoggingPolicy
     Properties:
+      FunctionName: CartDBStream
       CodeUri: shopping-cart-service/
       Handler: db_stream_handler.lambda_handler
       Layers:
@@ -358,7 +362,7 @@ Resources:
         - Statement:
             - Effect: Allow
               Action:
-                - "dynamodb:UpdateItem"
+                - 'dynamodb:UpdateItem'
               Resource:
                 - !GetAtt DynamoDBShoppingCartTable.Arn
       Events:
@@ -415,8 +419,7 @@ Resources:
     Properties:
       VisibilityTimeout: 20
       RedrivePolicy:
-        deadLetterTargetArn:
-          !GetAtt CartDeleteSQSDLQ.Arn
+        deadLetterTargetArn: !GetAtt CartDeleteSQSDLQ.Arn
         maxReceiveCount: 5
   CartDeleteSQSDLQ:
     Type: AWS::SQS::Queue
@@ -426,9 +429,9 @@ Resources:
     Properties:
       Type: String
       Name: /serverless-shopping-cart-demo/shopping-cart/cart-api-url
-      Value: !Sub "https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+      Value: !Sub 'https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
 
 Outputs:
   CartApi:
-    Description: "API Gateway endpoint URL for Prod stage for Cart Service"
-    Value: !Sub "https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Description: 'API Gateway endpoint URL for Prod stage for Cart Service'
+    Value: !Sub 'https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
