@@ -22,8 +22,11 @@ def lambda_handler(event, context):
     logger.info(f"Deleting {len(records)} records")
     with table.batch_writer() as batch:
         for item in records:
+            pk = item_body.get("pk", "")
+            logger.info(f"Deleting item - {pk} from cart")
             item_body = json.loads(item["body"])
-            batch.delete_item(Key={"pk": item_body["pk"], "sk": item_body["sk"]})
+            batch.delete_item(
+                Key={"pk": item_body["pk"], "sk": item_body["sk"]})
 
     return {
         "statusCode": 200,

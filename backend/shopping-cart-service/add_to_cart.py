@@ -43,6 +43,9 @@ def lambda_handler(event, context):
     quantity = request_payload.get("quantity", 1)
     cart_id, _ = get_cart_id(event["headers"])
 
+    logger.info(f"Add the product : ${product_id} to the cart - ${cart_id}")
+    logger.info(f"Requested quantity : {abs(quantity)}")
+
     # Because this method can be called anonymously, we need to check there's a logged in user
     user_sub = None
     jwt_token = event["headers"].get("Authorization")
@@ -51,8 +54,9 @@ def lambda_handler(event, context):
 
     try:
         product = get_product_from_external_service(product_id)
-        logger.info("No product found with product_id: %s", product_id)
+        logger.info("Product details : ", product)
     except NotFoundException:
+        logger.error("No product found with given id : ", product_id)
         return {
             "statusCode": 404,
             "headers": get_headers(cart_id=cart_id),
@@ -65,12 +69,15 @@ def lambda_handler(event, context):
         ttl = generate_ttl(
             7
         )  # Set a longer ttl for logged in users - we want to keep their cart for longer.
+        logger.info(f"Authenticated user in session: {pk}")
     else:
         logger.info("Unauthenticated user")
         pk = f"cart#{cart_id}"
         ttl = generate_ttl()
 
     if int(quantity) < 0:
+        logger.info(
+            f"Product#{product_id} added to cart. Time to live in cart : {ttl}")
         table.update_item(
             Key={"pk": pk, "sk": f"product#{product_id}"},
             ExpressionAttributeNames={
@@ -89,6 +96,9 @@ def lambda_handler(event, context):
             ConditionExpression="quantity >= :limit",
         )
     else:
+        ttl = generate_ttl()
+        logger.info(
+            f"Product#{product_id} added to cart. Time to live in cart : {ttl}")
         table.update_item(
             Key={"pk": pk, "sk": f"product#{product_id}"},
             ExpressionAttributeNames={
@@ -98,7 +108,7 @@ def lambda_handler(event, context):
             },
             ExpressionAttributeValues={
                 ":val": quantity,
-                ":ttl": generate_ttl(),
+                ":ttl": ttl,
                 ":productDetail": product,
             },
             UpdateExpression="ADD #quantity :val SET #expirationTime = :ttl, #productDetail = :productDetail",

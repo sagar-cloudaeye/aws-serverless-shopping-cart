@@ -30,6 +30,7 @@ def lambda_handler(event, context):
     try:
         # Because this method is authorized at API gateway layer, we don't need to validate the JWT claims here
         user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
+        logger.info("Checkout items in cart for user : ", user_id)
     except KeyError:
 
         return {
@@ -42,18 +43,26 @@ def lambda_handler(event, context):
     response = table.query(
         KeyConditionExpression=Key("pk").eq(f"user#{user_id}")
         & Key("sk").begins_with("product#"),
-        ConsistentRead=True,  # Perform a strongly consistent read here to ensure we get correct and up to date cart
+        # Perform a strongly consistent read here to ensure we get correct and up to date cart
+        ConsistentRead=True,
     )
 
     cart_items = response.get("Items")
+    logger.info(
+        f"Fetch existing items in the user#{user_id} cart : {len(cart_items)}")
     # batch_writer will be used to update status for cart entries belonging to the user
     with table.batch_writer() as batch:
         for item in cart_items:
+            pk = str(item.get("pk", ""))
+            logger.info("Checkout the item in cart : ", pk)
             # Delete ordered items
-            batch.delete_item(Key={"pk": item["pk"], "sk": item["sk"]})
+            batch.delete_item(Key={"pk": pk, "sk": item["sk"]})
+            logger.info("Remove the checked out item from cart : ", pk)
 
     metrics.add_metric(name="CartCheckedOut", unit="Count", value=1)
     logger.info({"action": "CartCheckedOut", "cartItems": cart_items})
+    logger.info(
+        f"Successfully checked out all items from the user#{user_id} cart")
 
     return {
         "statusCode": 200,
