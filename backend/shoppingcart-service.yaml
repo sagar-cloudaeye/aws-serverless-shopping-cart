@@ -182,6 +182,19 @@ Resources:
       Roles:
         - !Ref AddToCartRole
 
+  SNSPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: SNSPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action: ['sns:*']
+            # Resource: !GetAtt CartDeleteSQSQueue.Arn
+      Roles:
+        - !Ref AddToCartRole
+
   ListCartFunction:
     Type: AWS::Serverless::Function
     DependsOn:
@@ -442,6 +455,3 @@ Outputs:
   CartApi:
     Description: 'API Gateway endpoint URL for Prod stage for Cart Service'
     Value: !Sub 'https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
-  MyTopicArn:
-    Description: Arn of SNS Topic
-    Value: 'arn:aws:sns:us-west-1:739457818465:lambdaSampleApp'
