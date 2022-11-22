@@ -73,6 +73,13 @@ Resources:
             Identity: # OPTIONAL
               Header: Authorization # OPTIONAL; Default: 'Authorization'
 
+  MyTopicArn:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: arn:aws:sns:us-west-1:739457818465:lambdaSampleApp
+      Protocol: sqs
+      RawMessageDelivery: 'true'
+
   ListCartRole:
     Type: AWS::IAM::Role
     Properties:
