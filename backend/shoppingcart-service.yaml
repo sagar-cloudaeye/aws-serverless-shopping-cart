@@ -73,13 +73,6 @@ Resources:
             Identity: # OPTIONAL
               Header: Authorization # OPTIONAL; Default: 'Authorization'
 
-  MyTopicArn:
-    Type: AWS::SNS::Subscription
-    Properties:
-      TopicArn: arn:aws:sns:us-west-1:739457818465:lambdaSampleApp
-      Protocol: sqs
-      RawMessageDelivery: 'true'
-
   ListCartRole:
     Type: AWS::IAM::Role
     Properties:
@@ -179,19 +172,6 @@ Resources:
           - Effect: 'Allow'
             Action: ['sqs:SendMessage*']
             Resource: !GetAtt CartDeleteSQSQueue.Arn
-      Roles:
-        - !Ref AddToCartRole
-
-  SNSPolicy:
-    Type: 'AWS::IAM::Policy'
-    Properties:
-      PolicyName: SNSPolicy
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: 'Allow'
-            Action: ['sns:Subscribe']
-            # Resource: !GetAtt CartDeleteSQSQueue.Arn
       Roles:
         - !Ref AddToCartRole
 
