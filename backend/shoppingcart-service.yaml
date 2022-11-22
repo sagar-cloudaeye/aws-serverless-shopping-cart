@@ -435,6 +435,6 @@ Outputs:
   CartApi:
     Description: 'API Gateway endpoint URL for Prod stage for Cart Service'
     Value: !Sub 'https://${CartApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
-    MyTopicArn: 
+  MyTopicArn:
     Description: Arn of SNS Topic
     Value: 'arn:aws:sns:us-west-1:739457818465:lambdaSampleApp'
