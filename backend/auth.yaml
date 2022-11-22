@@ -5,7 +5,6 @@ Description: >
 
   SAM Template for auth resources
 
-
 Globals:
   Function:
     Timeout: 3
@@ -15,7 +14,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: !Sub ${AWS::StackName}-UserPool
-      AutoVerifiedAttributes: 
+      AutoVerifiedAttributes:
         - email
   UserPoolClient:
     Type: AWS::Cognito::UserPoolClient
@@ -24,7 +23,7 @@ Resources:
       GenerateSecret: false
       UserPoolId: !Ref CognitoUserPool
       ExplicitAuthFlows:
-        - ADMIN_NO_SRP_AUTH
+        - USER_PASSWORD_AUTH
 
   UserPoolSSM:
     Type: AWS::SSM::Parameter
@@ -49,9 +48,9 @@ Resources:
 
 Outputs:
   CognitoUserPoolId:
-    Description: "Cognito User Pool ID"
+    Description: 'Cognito User Pool ID'
     Value: !Ref CognitoUserPool
 
   CognitoAppClientId:
-    Description: "Cognito App Client ID"
+    Description: 'Cognito App Client ID'
     Value: !Ref UserPoolClient
