@@ -190,7 +190,7 @@ Resources:
         Version: '2012-10-17'
         Statement:
           - Effect: 'Allow'
-            Action: ['sns:*']
+            Action: ['sns:Subscribe']
             # Resource: !GetAtt CartDeleteSQSQueue.Arn
       Roles:
         - !Ref AddToCartRole
