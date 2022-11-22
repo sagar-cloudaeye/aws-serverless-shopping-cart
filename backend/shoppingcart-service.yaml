@@ -175,6 +175,19 @@ Resources:
       Roles:
         - !Ref AddToCartRole
 
+  SNSPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: SNSPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: 'Allow'
+            Action: ['sns:*']
+            Resource: '*'
+      Roles:
+        - !Ref AddToCartRole
+
   ListCartFunction:
     Type: AWS::Serverless::Function
     DependsOn:
