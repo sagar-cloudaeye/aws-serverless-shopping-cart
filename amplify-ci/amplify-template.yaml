@@ -17,7 +17,7 @@ Parameters:
 
   SrcS3Bucket:
     Type: String
-    Description: S3 Bucket for source code storage  
+    Description: S3 Bucket for source code storage
 
 Resources:
   AmplifyRole:
@@ -37,101 +37,93 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: 'Allow'
                 Action:
-                    - "s3:PutObject"
-                    - "s3:GetObject"
-                    - "s3:CreateMultipartUpload"
-                    - "s3:ListBucket"
-                    - "s3:CreateBucket"
+                  - 's3:PutObject'
+                  - 's3:GetObject'
+                  - 's3:CreateMultipartUpload'
+                  - 's3:ListBucket'
+                  - 's3:CreateBucket'
                 Resource:
-                    - !Sub "arn:aws:s3:::${SrcS3Bucket}"
-                    - !Sub "arn:aws:s3:::${SrcS3Bucket}/*"
-              -
-                Effect: "Allow"
+                  - !Sub 'arn:aws:s3:::${SrcS3Bucket}'
+                  - !Sub 'arn:aws:s3:::${SrcS3Bucket}/*'
+              - Effect: 'Allow'
                 Action:
-                    - "cloudformation:Describe*"
-                    - "cloudformation:Create*"
-                    - "cloudformation:Execute*"
+                  - 'cloudformation:Describe*'
+                  - 'cloudformation:Create*'
+                  - 'cloudformation:Execute*'
                 Resource:
-                    - "*"
-              -
-                Effect: Allow
+                  - '*'
+              - Effect: Allow
                 Action:
                   - lambda:*
-                Resource: 
-                  - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*"
-                  - !Sub "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:*"
-              -
-                Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:*'
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:*'
+              - Effect: Allow
                 Action:
                   - lambda:GetLayerVersion
                 Resource:
-                  - !Sub "arn:aws:lambda:${AWS::Region}:017000801446:layer:AWSLambdaPowertoolsPython*"
-              -
-                Effect: Allow
+                  - !Sub 'arn:aws:lambda:${AWS::Region}:017000801446:layer:AWSLambdaPowertoolsPython*'
+              - Effect: Allow
                 Action:
                   - lambda:*EventSourceMapping
-                Resource: 
-                  - "*"
-              -
-                Effect: "Allow"
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
                 Action:
-                    - "cloudformation:GetTemplateSummary"
-                Resource: "*"
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "iam:GetRole"
-                      - "iam:Create*"
-                      - "iam:Delete*"
-                      - "iam:PassRole"
-                      - "iam:*RolePolicy"
-                  Resource:
-                      - "*"
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "apigateway:*"
-                  Resource:
-                      - "*"
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "ssm:*"
-                  Resource:
-                      - "*"       
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "dynamodb:List*"
-                      - "dynamodb:Describe*"
-                      - "dynamodb:TagResource"
-                      - "dynamodb:UnTagResource"
-                      - "dynamodb:Update*"
-                      - "dynamodb:Create*"
-                      - "dynamodb:DeleteTable"
-                  Resource:
-                      - "*"   
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "sqs:*"
-                  Resource:
-                      - "*"
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "cognito-idp:*"
-                  Resource:
-                      - "*"
-              -
-                  Effect: "Allow"
-                  Action:
-                      - "sts:GetCallerIdentity"
-                  Resource:
-                      - "*"
+                  - 'cloudformation:GetTemplateSummary'
+                Resource: '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'iam:GetRole'
+                  - 'iam:Create*'
+                  - 'iam:Delete*'
+                  - 'iam:PassRole'
+                  - 'iam:*RolePolicy'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'apigateway:*'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'ssm:*'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'dynamodb:List*'
+                  - 'dynamodb:Describe*'
+                  - 'dynamodb:TagResource'
+                  - 'dynamodb:UnTagResource'
+                  - 'dynamodb:Update*'
+                  - 'dynamodb:Create*'
+                  - 'dynamodb:DeleteTable'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'sqs:*'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'cognito-idp:*'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'sns:*'
+                Resource:
+                  - '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'sts:GetCallerIdentity'
+                Resource:
+                  - '*'
 
   AmplifyApp:
     Type: AWS::Amplify::App
@@ -141,8 +133,7 @@ Resources:
       Description: AWS serverless shopping cart
       OauthToken: !Ref OauthToken
       CustomRules:
-        -
-          Source: </^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|ttf|map|json)$)([^.]+$)/>
+        - Source: </^[^.]+$|\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|ttf|map|json)$)([^.]+$)/>
           Target: /
           Status: 200
       EnvironmentVariables:
@@ -171,4 +162,8 @@ Outputs:
     Value: !GetAtt AmplifyApp.DefaultDomain
 
   MasterBranchUrl:
-    Value: !Join [ ".", [ !GetAtt AmplifyBranch.BranchName, !GetAtt AmplifyApp.DefaultDomain ]]
+    Value:
+      !Join [
+        '.',
+        [!GetAtt AmplifyBranch.BranchName, !GetAtt AmplifyApp.DefaultDomain],
+      ]
