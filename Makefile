@@ -36,6 +36,7 @@ amplify-deploy:
 			BranchName=$(GITHUB_BRANCH) \
 			SrcS3Bucket=$(S3_BUCKET) \
 		--stack-name CartApp
+		--notification-arns arn:aws:sns:us-west-1:739457818465:lambdaSampleApp
 
 frontend-serve: 
 	$(MAKE) -C frontend serve
