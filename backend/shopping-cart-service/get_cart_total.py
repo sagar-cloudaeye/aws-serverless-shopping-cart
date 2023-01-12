@@ -19,7 +19,10 @@ def lambda_handler(event, context):
     """
     List items in shopping cart.
     """
-    product_id = event["pathParameters"]["product_id"]
+    try:
+        product_id = event["pathParameters"]["product_id"]
+    except KeyError:
+        logger.error("get_cart_total: KeyError: No product found with given product_id")
     logger.info(f"Check the count of item#{product_id} in the shopping cart")
     response = table.get_item(
         Key={"pk": f"product#{product_id}", "sk": "totalquantity"}

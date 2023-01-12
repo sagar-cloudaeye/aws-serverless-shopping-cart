@@ -34,6 +34,7 @@ def lambda_handler(event, context):
     try:
         request_payload = json.loads(event["body"])
     except KeyError:
+        logger.error("update_cart: KeyError: no request payload")
         return {
             "statusCode": 400,
             "headers": get_headers(),
@@ -41,7 +42,16 @@ def lambda_handler(event, context):
         }
 
     # retrieve the product_id that was specified in the url
-    product_id = event["pathParameters"]["product_id"]
+    try:
+        product_id = event["pathParameters"]["product_id"]
+    except KeyError:
+        logger.error("update_cart: KeyError: product_id not found")
+        return {
+            "statusCode": 400,
+            "headers": get_headers(),
+            "body": json.dumps({"message": "update_cart: product not found"}),
+        }
+
     logger.info(f"Update quantity of items in cart for product#{product_id}")
     quantity = int(request_payload["quantity"])
     cart_id, _ = get_cart_id(event["headers"])

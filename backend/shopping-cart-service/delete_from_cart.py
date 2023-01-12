@@ -17,8 +17,10 @@ def lambda_handler(event, context):
     """
     Handle messages from SQS Queue containing cart items, and delete them from DynamoDB.
     """
-
-    records = event["Records"]
+    try:
+        records = event["Records"]
+    except KeyError:
+        logger.error("delete_from_total: KeyError: No records found")
     logger.info(f"Deleting {len(records)} records")
     with table.batch_writer() as batch:
         for item in records:

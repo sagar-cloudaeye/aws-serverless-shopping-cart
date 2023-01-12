@@ -5,10 +5,12 @@ import uuid
 from decimal import Decimal
 from http.cookies import SimpleCookie
 
-from aws_lambda_powertools import Tracer
+
+from aws_lambda_powertools import Logger, Tracer
 
 import cognitojwt
 
+logger = Logger()
 tracer = Tracer()
 
 HEADERS = {
@@ -71,6 +73,7 @@ def get_cart_id(event_headers):
         cart_cookie = cookie["cartId"].value
         generated = False
     except KeyError:
+        logger.info("shared: temporary: OOV test print: set cart_cookie")
         cart_cookie = str(uuid.uuid4())
         generated = True
 
