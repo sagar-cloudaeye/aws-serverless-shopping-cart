@@ -34,6 +34,7 @@ def lambda_handler(event, context):
     try:
         request_payload = json.loads(event["body"])
     except KeyError:
+        logger.error("add_to_cart: KeyError: no request payload")
         return {
             "statusCode": 400,
             "headers": get_headers(),

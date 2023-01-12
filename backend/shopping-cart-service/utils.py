@@ -20,7 +20,7 @@ def get_product_from_external_service(product_id):
     try:
         response_dict = response.json()["product"]
     except KeyError:
-        logger.warn("No product found with id %s", product_id)
+        logger.error("No product found with id %s", product_id)
         raise NotFoundException
 
     return response_dict

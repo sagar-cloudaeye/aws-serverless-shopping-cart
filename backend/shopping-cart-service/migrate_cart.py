@@ -61,7 +61,7 @@ def lambda_handler(event, context):
         logger.info(
             "LoggedIn session detected. Migrating cart_id %s to user_id %s", cart_id, user_id)
     except KeyError:
-
+        logger.error("migrate_cart: KeyError: Unauthorized token")
         return {
             "statusCode": 400,
             "headers": get_headers(cart_id),

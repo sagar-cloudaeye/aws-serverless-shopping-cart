@@ -32,7 +32,7 @@ def lambda_handler(event, context):
         user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
         logger.info("Checkout items in cart for user : ", user_id)
     except KeyError:
-
+        logger.error("checkout_cart: KeyError: Unauthorized token")
         return {
             "statusCode": 400,
             "headers": get_headers(cart_id),
