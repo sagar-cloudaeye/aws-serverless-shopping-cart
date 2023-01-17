@@ -73,7 +73,6 @@ def get_cart_id(event_headers):
         cart_cookie = cookie["cartId"].value
         generated = False
     except KeyError:
-        logger.info("shared: temporary: OOV test print: set cart_cookie")
         cart_cookie = str(uuid.uuid4())
         generated = True
 

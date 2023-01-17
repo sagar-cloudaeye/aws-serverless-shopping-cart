@@ -29,6 +29,10 @@ def lambda_handler(event, context):
         (item for item in product_list if item["productId"]
          == product_id), None
     )
+
+    if product is None:
+        logger.error(f"ERROR: get_product: no match found for product id: {product_id}")
+
     logger.debug(
         f"Successfully fetched product detail with id - {product_id}: {product}")
     return {
