@@ -30,7 +30,7 @@ def lambda_handler(event, context):
     try:
         # Because this method is authorized at API gateway layer, we don't need to validate the JWT claims here
         user_id = event["requestContext"]["authorizer"]["claims"]["sub"]
-        logger.info("Checkout items in cart for user : ", user_id)
+        logger.info(f"Checkout items in cart for user : {user_id}")
     except KeyError:
         logger.error("checkout_cart: KeyError: Unauthorized token")
         return {
