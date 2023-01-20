@@ -55,9 +55,9 @@ def lambda_handler(event, context):
 
     try:
         product = get_product_from_external_service(product_id)
-        logger.info("Product details : ", product)
+        logger.info(f"Product details : {product}")
     except NotFoundException:
-        logger.error("No product found with given id : ", product_id)
+        logger.error(f"No product found with given id : {product_id}")
         return {
             "statusCode": 404,
             "headers": get_headers(cart_id=cart_id),

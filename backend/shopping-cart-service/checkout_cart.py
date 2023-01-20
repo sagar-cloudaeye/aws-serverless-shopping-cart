@@ -54,10 +54,10 @@ def lambda_handler(event, context):
     with table.batch_writer() as batch:
         for item in cart_items:
             pk = str(item.get("pk", ""))
-            logger.info("Checkout the item in cart : ", pk)
+            logger.info(f"Checkout the item in cart : {pk}")
             # Delete ordered items
             batch.delete_item(Key={"pk": pk, "sk": item["sk"]})
-            logger.info("Remove the checked out item from cart : ", pk)
+            logger.info(f"Remove the checked out item from cart : {pk}")
 
     metrics.add_metric(name="CartCheckedOut", unit="Count", value=1)
     logger.info({"action": "CartCheckedOut", "cartItems": cart_items})
