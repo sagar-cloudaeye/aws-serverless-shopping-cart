@@ -5,16 +5,6 @@ Description: >
 
   SAM Template for mock product-service
 Parameters:
-  DdApiKey:
-    Type: String
-    Description: The Datadog API key, which can be found from the APIs page (/organization-settings/api-keys).
-    NoEcho: true
-  DdSite:
-    Type: String
-    Default: datadoghq.com
-    Description: Define your Datadog Site to send data to. Possible values are `datadoghq.com`, `datadoghq.eu`, `us3.datadoghq.com`, `us5.datadoghq.com` and `ddog-gov.com`.
-    AllowedPattern: .+
-    ConstraintDescription: DdSite is required
   AllowedOrigin:
     Type: 'String'
     Default: '*'
@@ -54,17 +44,6 @@ Resources:
           Properties:
             Path: /product/{product_id}
             Method: get
-      Environment:
-        Variables:
-          DD_LAMBDA_HANDLER: get_product.lambda_handler
-          DD_TRACE_ENABLED: true
-          DD_API_KEY: !Ref DdApiKey
-          DD_CAPTURE_LAMBDA_PAYLOAD: true
-          DD_LOG_LEVEL: DEBUG
-          DD_SERVICE: datadog-serverless-sample-app
-          DD_ENV: dev
-          DD_VERSION: 1.0.0
-          DD_SITE: !Ref DdSite
 
   GetProductsFunction:
     Type: AWS::Serverless::Function
@@ -78,17 +57,6 @@ Resources:
           Properties:
             Path: /product
             Method: get
-      Environment:
-        Variables:
-          DD_LAMBDA_HANDLER: get_product.lambda_handler
-          DD_TRACE_ENABLED: true
-          DD_API_KEY: !Ref DdApiKey
-          DD_CAPTURE_LAMBDA_PAYLOAD: true
-          DD_LOG_LEVEL: DEBUG
-          DD_SERVICE: datadog-serverless-sample-app
-          DD_ENV: dev
-          DD_VERSION: 1.0.0
-          DD_SITE: !Ref DdSite
 
   GetProductApiUrl:
     Type: AWS::SSM::Parameter

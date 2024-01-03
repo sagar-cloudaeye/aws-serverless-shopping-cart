@@ -1,3 +1,2 @@
 .env.local
 .idea
-backend/.aws-sam/
