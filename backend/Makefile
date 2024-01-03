@@ -8,7 +8,7 @@ build:
 
 deploy:  # s3 bucket still needed for layer
 	@echo "Deploying stack $(STACKNAME)-$(TEMPLATE)..."
-	@sam deploy --capabilities CAPABILITY_NAMED_IAM --stack-name $(STACKNAME)-$(TEMPLATE) --s3-bucket $(S3_BUCKET) --parameter-overrides AllowedOrigin=$(ORIGIN) --parameter-overrides DdSite=$(DD_SITE) --parameter-overrides DdApiKey=$(DD_API_KEY) --no-fail-on-empty-changeset --notification-arns arn:aws:sns:eu-west-1:739457818465:lambdaSampleApp
+	@sam deploy --capabilities CAPABILITY_NAMED_IAM --stack-name $(STACKNAME)-$(TEMPLATE) --s3-bucket $(S3_BUCKET) --parameter-overrides AllowedOrigin='*' --parameter-overrides DdSite=$(DD_SITE) --parameter-overrides DdApiKey=$(DD_API_KEY) --no-fail-on-empty-changeset --notification-arns arn:aws:sns:eu-west-1:739457818465:lambdaSampleApp
 
 tests:
 	py.test -v

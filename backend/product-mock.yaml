@@ -17,6 +17,7 @@ Parameters:
     ConstraintDescription: DdSite is required
   AllowedOrigin:
     Type: 'String'
+    Default: '*'
 
 Globals:
   Function:

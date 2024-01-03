@@ -17,6 +17,7 @@ Parameters:
     Default: '/serverless-shopping-cart-demo/products/products-api-url'
   AllowedOrigin:
     Type: 'String'
+    Default: '*'
 
 Globals:
   Function:
